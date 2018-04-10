@@ -1,0 +1,89 @@
+// Java program to print top view of Binary tree
+import java.util.*;
+import java.util.Map.Entry;
+                                                                                      //Time Complexity: O(n)
+// Class for a tree node
+class TreeNode
+{
+	// Members
+	int key;
+	TreeNode left, right;
+    int hd;
+	// Constructor
+	public TreeNode(int key)
+	{
+		this.key = key;
+		left = right = null;
+		hd = Integer.MAX_VALUE;
+	}
+}
+
+class Tree
+{
+	TreeNode root;
+
+	public Tree() { root = null; }
+	public Tree(TreeNode n) { root = n; }
+
+	public void printTopView()
+	{
+		// base case
+		if (root == null) { return; }
+        int hd = 0;
+        Map<Integer, Integer> map = new TreeMap<>();
+        
+        root.hd =hd;
+		Queue<TreeNode> Q = new LinkedList<TreeNode>();
+		Q.add(root); // Horizontal distance of root is 0
+
+		// Standard BFS or level order traversal loop
+		while (!Q.isEmpty())
+		{
+			TreeNode n = Q.remove();
+			if (!map.containsKey(n.hd))
+			{
+				map.put(n.hd,n.key);
+				
+			}
+
+			// Enqueue left and right children of current node
+			if (n.left != null)
+            {
+                n.left.hd = n.hd-1;
+                Q.add(n.left);
+            }
+            // If the dequeued node has a left child add it to the
+            // queue with a horizontal distance hd+1.
+            if (n.right != null)
+            {
+                n.right.hd = n.hd+1;
+                Q.add(n.right);
+            }
+		}
+
+		Set<Entry<Integer, Integer>> set = map.entrySet();
+         Iterator<Entry<Integer, Integer>> iterator = set.iterator();
+         while (iterator.hasNext())
+        {
+            Map.Entry<Integer, Integer> me = iterator.next();
+            System.out.print(me.getValue()+" ");
+        }
+	}
+}
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.right = new TreeNode(3);
+		root.left.left = new TreeNode(4);
+		root.left.right = new TreeNode(5);
+		root.right.right = new TreeNode(7);
+		root.right.left = new TreeNode(6);
+		Tree t = new Tree(root);
+		System.out.println("Following are nodes in top view of Binary Tree");
+		t.printTopView();
+	}
+}
